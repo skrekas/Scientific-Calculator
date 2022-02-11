@@ -1,1 +1,3 @@
-# Scientific-Calculator
+## Scientific-Calculator
+
+Προτζεκτ για το μάθημα ΠΛΗΠΡΟ της πληροφορικής του ΕΑΠ. 
