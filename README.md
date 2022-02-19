@@ -1,3 +1,3 @@
-## Scientific-Calculator
+### Scientific-Calculator
 
-Πρότζεκτ για το μάθημα ΠΛΗΠΡΟ της πληροφορικής του ΕΑΠ. 
+Scientific calculator written in Python
