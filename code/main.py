@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import tkinter.font as font
 
 class Calculator(tk.Tk):
@@ -8,7 +9,10 @@ class Calculator(tk.Tk):
         self.title("Scientific Calculator")
         self.geometry('600x400+50+50')
         self.resizable(True, True)
-        self.config(bg="#363636")
+        self.config(bg="#292929")
+        self.iconbitmap("./assets/icon.ico")
+
+        self.minsize(400,400)
 
         self.build_menu()
         self.layout()
@@ -26,7 +30,7 @@ class Calculator(tk.Tk):
         val_pad_x = 1
         val_pad_y = 1
 
-        btn_font = font.Font(family='Helvetica', size=16, weight='normal')
+        btn_font = font.Font(family='Helvetica', size=15, weight='normal')
         input_font = font.Font(family='Helvetica', size=20, weight='bold')
 
         self.columnconfigure(0, pad=3, weight=1)
@@ -99,7 +103,8 @@ class Calculator(tk.Tk):
         minus.grid(row=4, column=3, sticky=tk.NSEW, padx=val_pad_x, pady=val_pad_y)
 
         # --- Buttons: Row 5 ---
-        one = tk.Button(self, text="1", background='#3b3b3b', foreground='white', font=btn_font, command=lambda: self.update_input(1))
+        one_btn_icon = tk.PhotoImage(file='./assets/1.png')
+        one = tk.Button(self, text=1, background="#3b3b3b", foreground='white', font=btn_font, command=lambda: self.update_input(1))
         one.grid(row=5, column=0, sticky=tk.NSEW, padx=val_pad_x, pady=val_pad_y)
 
         two = tk.Button(self, text="2", background='#3b3b3b', foreground='white', font=btn_font, command=lambda: self.update_input(2))
