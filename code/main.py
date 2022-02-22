@@ -7,12 +7,14 @@ class Calculator(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Scientific Calculator")
-        self.geometry('600x400+50+50')
+        self.geometry('400x400+50+50')
         self.resizable(True, True)
-        self.config(bg="#292929")
+        self.config(bg="#757575")
+        # Add application icom
         self.iconbitmap("./assets/icon.ico")
 
-        self.minsize(400,400)
+        # Set application minimum size (to avoid distortion)
+        self.minsize(400, 400)
 
         self.build_menu()
         self.layout()
@@ -30,7 +32,7 @@ class Calculator(tk.Tk):
         val_pad_x = 1
         val_pad_y = 1
 
-        btn_font = font.Font(family='Helvetica', size=15, weight='normal')
+        btn_font = font.Font(family='Helvetica', size=14, weight='normal')
         input_font = font.Font(family='Helvetica', size=20, weight='bold')
 
         self.columnconfigure(0, pad=3, weight=1)
@@ -47,7 +49,7 @@ class Calculator(tk.Tk):
         self.rowconfigure(6, pad=3, weight=1)
 
         # --- Input: Row 0 ---
-        self.entry = tk.Entry(self, font=input_font)
+        self.entry = tk.Entry(self, font=input_font, background='#e6e6e6')
         self.entry.grid(row=0, columnspan=4, sticky=tk.NSEW)
 
         # --- Buttons: Row 1 ---
