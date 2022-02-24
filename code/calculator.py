@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import font
+from build_menu import *
 
 
 # Constants
@@ -7,12 +8,13 @@ font_family = "Sans Serif"
 BACKGROUND_COLOR = "#dbdbdb"
 SCREEN_DIGIT_COLOR = "#335de8"
 SMALL_FONT = (font_family, 16)
-LARGE_FONT = (font_family, 40, "bold")
+LARGE_FONT = (font_family, 30, "bold")
 WHITE = "#FFFFFF"
 DIGITS_FONT = (font_family, 18, "bold")
 DIGITS_COLOR = "#383838"
 OPERATIONS_FONT = (font_family, 20)
 OPERATION_COLOR = "#4f2121"
+
 
 class Calculator:
 
@@ -21,14 +23,23 @@ class Calculator:
         # Αρχικοποίηση του παραθύρου της εφαρμογής
         self.window = tk.Tk()
         # Ορισμός της γεωμετρίας - διαστάσεων του παραθύρου της εφαρμογής
-        self.window.geometry("400x600")
+        self.window.geometry("500x600")
         # Ορισμός εαν το παράθυρο της εφαρμογής έχει μεταβαλλόμενες διαστάσεις κατά x και y
         self.window.resizable(False, False)
         # Τίτλος του παραθύρου της εφαρμογής
-        self.window.title("Scientific Calculator")
+        self.window.title("Calculator (Standard Mode)")
         # Ορισμός του εικονιδίου της εφαρμογής
         self.window.iconbitmap("./assets/icon.ico")
-        self.window.minsize(400, 600)
+        # Ορισμός των ελαχίστων διαστάσεων της εφαρμογής
+        self.window.minsize(500, 600)
+        # Μεταβλητή που αποθηκεύσει την λειτουργία του calculator (standard, scientific κτλ.)
+        self.mode = "standard"
+
+        # Προσθήκη του menu της εφαρμογής που επιτρέπει την εναλλαγή
+        # ανάμεσα σε διάφορες καταστάσεις λειτουργίας του calculator
+        # π.χ. standard, scientific, etc.
+        menu = CalculatorMenu(self.window)
+
 
         # Dictionary για την αποθήκευση των ψηφίων του calculator
         # Η χρήση dictionary βοηθά στον ορισμό των ψηφίων του calculator
@@ -129,9 +140,6 @@ class Calculator:
         button = tk.Button(self.buttons_frame, text="C", bg=WHITE,
                            fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=lambda: self.clear())
         button.grid(row=0, column=1, columnspan=3, sticky=tk.NSEW)
-
-
-
 
     def evaluate(self):
         self.total_value += self.current_value + ' ='
