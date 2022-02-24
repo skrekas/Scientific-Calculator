@@ -3,14 +3,15 @@ from tkinter import font
 
 
 # Constants
+font_family = "Sans Serif"
 BACKGROUND_COLOR = "#dbdbdb"
 SCREEN_DIGIT_COLOR = "#335de8"
-SMALL_FONT = ("Palatino Linotype", 16)
-LARGE_FONT = ("Palatino Linotype", 40, "bold")
+SMALL_FONT = (font_family, 16)
+LARGE_FONT = (font_family, 40, "bold")
 WHITE = "#FFFFFF"
-DIGITS_FONT = ("Palatino Linotype", 18, "bold")
+DIGITS_FONT = (font_family, 18, "bold")
 DIGITS_COLOR = "#383838"
-OPERATIONS_FONT = ("Palatino Linotype", 20)
+OPERATIONS_FONT = (font_family, 20)
 OPERATION_COLOR = "#4f2121"
 
 class Calculator:
@@ -20,14 +21,14 @@ class Calculator:
         # Αρχικοποίηση του παραθύρου της εφαρμογής
         self.window = tk.Tk()
         # Ορισμός της γεωμετρίας - διαστάσεων του παραθύρου της εφαρμογής
-        self.window.geometry("400x700")
+        self.window.geometry("400x600")
         # Ορισμός εαν το παράθυρο της εφαρμογής έχει μεταβαλλόμενες διαστάσεις κατά x και y
-        self.window.resizable(True, True)
+        self.window.resizable(False, False)
         # Τίτλος του παραθύρου της εφαρμογής
         self.window.title("Scientific Calculator")
         # Ορισμός του εικονιδίου της εφαρμογής
         self.window.iconbitmap("./assets/icon.ico")
-        self.window.minsize(400, 700)
+        self.window.minsize(400, 600)
 
         # Dictionary για την αποθήκευση των ψηφίων του calculator
         # Η χρήση dictionary βοηθά στον ορισμό των ψηφίων του calculator
@@ -129,6 +130,9 @@ class Calculator:
                            fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=lambda: self.clear())
         button.grid(row=0, column=1, columnspan=3, sticky=tk.NSEW)
 
+
+
+
     def evaluate(self):
         self.total_value += self.current_value + ' ='
         self.update_total_value()
@@ -149,9 +153,17 @@ class Calculator:
                            fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.evaluate)
         button.grid(row=4, column=4, sticky=tk.NSEW)
 
+    # Συνάρτηση για την αλλαγή προσήμου του αριθμού
+    def apply_sign(self):
+        if self.current_value[0] == "-":
+            self.current_value = self.current_value[1:]
+        else:
+            self.current_value = "-" + self.current_value
+        self.update_current_value()
+
     def create_plus_minus_button(self):
         button = tk.Button(self.buttons_frame, text="+/-", bg=WHITE,
-                           fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0)
+                           fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.apply_sign)
         button.grid(row=4, column=1, sticky=tk.NSEW)
 
     def create_screen_frame(self):
