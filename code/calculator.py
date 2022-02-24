@@ -40,7 +40,6 @@ class Calculator:
         # π.χ. standard, scientific, etc.
         menu = CalculatorMenu(self.window)
 
-
         # Dictionary για την αποθήκευση των ψηφίων του calculator
         # Η χρήση dictionary βοηθά στον ορισμό των ψηφίων του calculator
         # μέσω μιας δομής επανάληψης for για την αποφυγή επανάληψης κώδικα.
@@ -86,7 +85,7 @@ class Calculator:
     # Συνάρτηση που δημιουργεί τα κείμενα (labels) τα οποία σχηματίζουν τους
     # αριθμούς και τις πράξεις. Η συνάρτηση επιστρέφει τα κείμενα
     def create_display_readings(self):
-        # Κείμενο (label) που αντιπροσωπεύει το σύνολο
+        # Κείμενο (label) που αντιπροσωπεύει το σύνολο - (πάνω  label)
         total_value_lbl = tk.Label(self.screen_frame, text=self.total_value,
                                    anchor=tk.E, bg=BACKGROUND_COLOR, fg=SCREEN_DIGIT_COLOR, padx=20, font=SMALL_FONT)
         total_value_lbl.pack(expand=True, fill="both")
@@ -101,7 +100,13 @@ class Calculator:
         if self.current_value == "0":
             self.current_value = ""
         self.current_value += str(value)
+
+        # TODO - FIX THE SCIENTIFIC FORMAT
+        if len(self.current_value) > 20:
+            scientific_format_value = '%.2E' % float(self.current_value)
+            self.update_current_value()
         self.update_current_value()
+
 
     def create_digit_buttons(self):
         for digit, grid_loc in self.digits.items():
@@ -165,6 +170,8 @@ class Calculator:
     def apply_sign(self):
         if self.current_value[0] == "-":
             self.current_value = self.current_value[1:]
+        elif self.current_value[0] == "0":
+            pass
         else:
             self.current_value = "-" + self.current_value
         self.update_current_value()

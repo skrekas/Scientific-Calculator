@@ -1,7 +1,6 @@
 import tkinter as tk
 from calculator import *
 
-
 class CalculatorMenu(Calculator):
 
     # Αρχικοποίηση του menu της εφαρμογής calculator
@@ -12,8 +11,8 @@ class CalculatorMenu(Calculator):
 
         mode_menu = tk.Menu(menu_bar, tearoff=0)
 
-        mode_menu.add_command(label="Standard", command=self.change_mode)
-        mode_menu.add_command(label="Scientific", command=self.change_mode)
+        mode_menu.add_command(label="Standard", command=self.change_mode_to_standard)
+        mode_menu.add_command(label="Scientific", command=self.change_mode_to_scientific)
 
         mode_menu.add_separator()
 
@@ -31,6 +30,10 @@ class CalculatorMenu(Calculator):
         self.window.config(menu=menu_bar)
 
 
-    def change_mode(self):
-        self.window.geometry("800x800")
+    def change_mode_to_standard(self):
+        self.window.geometry("500x600")
+        self.window.title("Calculator (Standard Mode)")
+
+    def change_mode_to_scientific(self):
+        self.window.geometry("800x1000")
         self.window.title("Calculator (Scientific Mode)")
