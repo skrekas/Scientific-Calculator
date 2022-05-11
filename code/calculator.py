@@ -8,11 +8,11 @@ font_family = "Sans Serif"
 BACKGROUND_COLOR = "#dbdbdb"
 SCREEN_DIGIT_COLOR = "#335de8"
 SMALL_FONT = (font_family, 16)
-LARGE_FONT = (font_family, 30, "bold")
+LARGE_FONT = (font_family, 20, "bold")
 WHITE = "#FFFFFF"
 DIGITS_FONT = (font_family, 18, "bold")
 DIGITS_COLOR = "#383838"
-OPERATIONS_FONT = (font_family, 20)
+OPERATIONS_FONT = (font_family, 30)
 OPERATION_COLOR = "#4f2121"
 
 
