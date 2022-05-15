@@ -76,6 +76,7 @@ class Calculator:
             self.buttons_frame.rowconfigure(x, weight=1, pad=1)
             self.buttons_frame.columnconfigure(x, weight=1, pad=1)
 
+        # Καλώ τις συναρτήσεις για την δημιουργία των κουμπιών στο GUI
         self.create_digit_buttons()
         self.create_operations_buttons()
         self.create_clear_button()
