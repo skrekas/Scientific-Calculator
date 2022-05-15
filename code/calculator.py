@@ -15,8 +15,6 @@ DIGITS_COLOR = "#383838"
 OPERATIONS_FONT = (font_family, 30)
 OPERATION_COLOR = "#4f2121"
 
-print("TEST AND TEST")
-
 
 class Calculator:
 
