@@ -1,3 +1,4 @@
+import math
 import tkinter as tk
 from tkinter import font
 from build_menu import *
@@ -29,7 +30,7 @@ class Calculator:
         # Τίτλος του παραθύρου της εφαρμογής
         self.window.title("Calculator (Standard Mode)")
         # Ορισμός του εικονιδίου της εφαρμογής
-        self.window.iconbitmap("./assets/icon.ico")
+        # self.window.iconbitmap("./assets/icon.ico")
         # Ορισμός των ελαχίστων διαστάσεων της εφαρμογής
         self.window.minsize(500, 600)
         # Μεταβλητή που αποθηκεύσει την λειτουργία του calculator (standard, scientific κτλ.)
@@ -49,10 +50,10 @@ class Calculator:
         # το οποίο χρησιμοποιείται παρακάτω για την τοποθέτηση των ψηφίων στο παράθυρο της
         # εφαρμογής
         self.digits = {
-            7: (1, 1), 8: (1, 2), 9: (1, 3),
-            4: (2, 1), 5: (2, 2), 6: (2, 3),
-            3: (3, 1), 2: (3, 2), 1: (3, 3),
-            0: (4, 2), '.': (4, 3)
+            7: (2, 1), 8: (2, 2), 9: (2, 3),
+            4: (3, 1), 5: (3, 2), 6: (3, 3),
+            3: (4, 1), 2: (4, 2), 1: (4, 3),
+            0: (5, 2), '.': (5, 3)
         }
 
         self.operations = {
@@ -60,6 +61,14 @@ class Calculator:
             "x": "\u00D7",
             "-": "-",
             "+": "+"
+        }
+
+        self.second_row = {
+            "x\u00B2": "x^2",
+            "1/x": "1/x",
+            "|x|": "|x|",
+            "exp": "exp",
+            "mod": "mod"
         }
 
         self.total_value = ""
@@ -82,6 +91,7 @@ class Calculator:
         self.create_clear_button()
         self.create_equals_button()
         self.create_plus_minus_button()
+        self.create_buttons_2nd_row()
 
     # Συνάρτηση που δημιουργεί τα κείμενα (labels) τα οποία σχηματίζουν τους
     # αριθμούς και τις πράξεις. Η συνάρτηση επιστρέφει τα κείμενα
@@ -116,6 +126,44 @@ class Calculator:
                                command=lambda x=digit: self.add_to_value(x))
             button.grid(row=grid_loc[0], column=grid_loc[1], sticky=tk.NSEW)
 
+    def create_buttons_2nd_row(self):
+        i = 0
+        for item in self.second_row:
+            i = i + 1
+            if (i < 5):
+                button = tk.Button(self.buttons_frame, text=item, bg=WHITE,
+                                   fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0,
+                                   command=lambda x=item: self.commands2row(x))
+                button.grid(row=1, column=i, sticky=tk.NSEW)
+        item = self.second_row.get('mod')
+        button = tk.Button(self.buttons_frame, text=item, bg=WHITE,
+                           fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0,
+                           command=lambda x=item: self.append_operator(x))
+        button.grid(row=1, column=5, sticky=tk.NSEW)
+
+    def commands2row(self, button):
+        if (button=='x\u00B2'):
+            curr = eval(self.current_value)
+            self.current_value = str(curr * curr)
+            self.update_total_value()
+            self.update_current_value()
+        if (button=='1/x'):
+            curr = eval(self.current_value)
+            self.current_value = str(1 / curr)
+            self.update_total_value()
+            self.update_current_value()
+        if (button=='|x|'):
+            curr = eval(self.current_value)
+            self.current_value = str(abs(curr))
+            self.update_total_value()
+            self.update_current_value()
+        if (button=='exp'):
+            curr = eval(self.current_value)
+            self.current_value = str(math.exp(curr))
+            self.update_total_value()
+            self.update_current_value()
+        return
+
     def append_operator(self, operator):
         print(operator)
         self.current_value += " " + operator + " "
@@ -126,7 +174,7 @@ class Calculator:
         self.update_current_value()
 
     def create_operations_buttons(self):
-        i = 0
+        i = 2
         for operator, symbol in self.operations.items():
             button = tk.Button(self.buttons_frame, text=symbol,
                                bg=WHITE, fg=OPERATION_COLOR,
@@ -159,13 +207,15 @@ class Calculator:
             self.current_value = str(eval(components[0] + "+" + components[2]))
         elif components[1] == "-":
             self.current_value = str(eval(components[0] + "-" + components[2]))
+        elif components[1] == "mod":
+            self.current_value = str(eval(components[0] + "%" + components[2]))
         self.total_value = ""
         self.update_current_value()
 
     def create_equals_button(self):
         button = tk.Button(self.buttons_frame, text="=", bg="#4abbf7",
                            fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.evaluate)
-        button.grid(row=4, column=4, sticky=tk.NSEW)
+        button.grid(row=5, column=5, sticky=tk.NSEW)
 
     # Συνάρτηση για την αλλαγή προσήμου του αριθμού
     def apply_sign(self):
@@ -180,7 +230,7 @@ class Calculator:
     def create_plus_minus_button(self):
         button = tk.Button(self.buttons_frame, text="+/-", bg=WHITE,
                            fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.apply_sign)
-        button.grid(row=4, column=1, sticky=tk.NSEW)
+        button.grid(row=5, column=1, sticky=tk.NSEW)
 
     def create_screen_frame(self):
         frame = tk.Frame(self.window, height=200, bg=BACKGROUND_COLOR)
