@@ -84,9 +84,9 @@ class Calculator:
         self.create_clear_button()
         self.create_equals_button()
         self.create_plus_minus_button()
-        self.create_clear_entry_button()
-        self.create_backspace_button()
-        self.create_precent_button()
+        self.create_clear_entry_button()#k 21-5-2022
+        self.create_backspace_button()#k 21-5-2022
+        self.create_precent_button()#k 21-5-2022
 
 
     # Συνάρτηση που δημιουργεί τα κείμενα (labels) τα οποία σχηματίζουν τους
