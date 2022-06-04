@@ -35,14 +35,46 @@ class Calculator:
         self.window.iconbitmap("./assets/icon.ico")
         # Ορισμός των ελαχίστων διαστάσεων της εφαρμογής
         self.window.minsize(500, 600)
+
         # Ορισμός μεταβλητής που ελέγχει αν η προηγούμενη πράξη
         # δεν ήταν εφικτή
         self.error = False
+
+        # Ορισμός μεταβλητής που δηλώνει εάν έχει εισαχθεί το '.' για ορισμό δεκαδικού μέρους.
+        # Χρησιμοποιείται για την απαγόρευση διαδοχικών εισόδων του συμβόλου '.' σε έναν αριθμο
+        # π.χ. 4.3.5.600.66. Αυτός ο αριθμός δεν είναι έγκυρος.
+        self.isDecimal = False
+
         # Μονάδα μέτρησης γωνίας (degrees, radians)
         self.angle_mode = 'radians'
 
+        # Δημιουργία τοπικών αναφορά των κουμπιών του calculator
+        # Χρήσιμες για την ενεργοποίηση/απενεργοποίηση κουμπιών στην περίπτωση σφάλματος υπολογισμού
         self.MC = None
         self.MR = None
+        self.M_plus= None
+        self.M_minus= None
+        self.MS = None
+        self.EXP = None
+        self.FACTORIAL= None
+        self.SIN = None
+        self.COS = None
+        self.TAN = None
+        self.INVERSE = None
+        self.SQUARE = None
+        self.SQROOT = None
+        self.LOG = None
+        self.LN = None
+        self.DEL = None
+        self.AC = None
+        self.MULTIPLY = None
+        self.DIVIDE = None
+        self.PLUS = None
+        self.MINUS = None
+        self.PLUS_MINUS = None
+        self.DOT = None
+        self.INCREASE_ORDER = None
+        self.EQUAL = None
 
         # Dictionary για την αποθήκευση των ψηφίων του calculator
         # Η χρήση dictionary βοηθά στον ορισμό των ψηφίων του calculator
@@ -96,7 +128,8 @@ class Calculator:
                                      fg=SCREEN_DIGIT_COLOR, padx=20, font=LARGE_FONT)
         current_value_lbl.pack(expand=True, fill="both")
 
-        # Κείμενο (label) που αντιπροσωπεύει τον αριθμό που πληκτρολογείται
+        # Κείμενο (label) που αντιπροσωπεύει τη λειτουργία (mode) των γωνιών (degrees, radians)
+        # Επηρεάζει τις τριγωνομετρικές συναρτήσεις
         angle_mode_lbl = tk.Label(self.screen_frame, text=self.angle_mode,
                                    anchor=tk.E, bg=BACKGROUND_COLOR,
                                      fg=SCREEN_DIGIT_COLOR, padx=20, font=SMALL_FONT)
@@ -107,8 +140,18 @@ class Calculator:
     # Συνάρτηση που κατασκευάζει τον αριθμό κατά
     # την πληκτρολόγηση των ψηφίων
     def add_to_value(self, value):
+
         if self.current_value == "0":
             self.current_value = ""
+
+        if value == '.' and not self.isDecimal:
+            print('Setting isDecimal to True')
+            self.isDecimal = True
+            self.DOT['state'] = 'disabled'
+        elif self.isDecimal:
+            self.isDecimal = False
+            self.DOT['state'] = 'disabled'
+
         self.current_value += str(value)
 
         # TODO - FIX THE SCIENTIFIC FORMAT
@@ -139,6 +182,7 @@ class Calculator:
         self.current_value = ""
         self.update_total_value()
         self.update_current_value()
+        self.DOT['state'] = 'normal'
 
     def create_other_buttons(self):
         # 1η γραμμή κουμπιών
@@ -152,154 +196,156 @@ class Calculator:
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0)
         self.MR.grid(row=0, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='M+',
+        self.M_plus = tk.Button(self.buttons_frame, text='M+',
                            bg='#ebdec0', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0)
-        button.grid(row=0, column=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.M_plus.grid(row=0, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='M-',
+        self.M_minus = tk.Button(self.buttons_frame, text='M-',
                            bg='#ebdec0', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0)
-        button.grid(row=0, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.M_minus.grid(row=0, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text="MS",
+        self.MS = tk.Button(self.buttons_frame, text="MS",
                            bg='#ebdec0', fg=DIGITS_COLOR,
                            font=DEDICATED_BUTTONS_FONT,
                            borderwidth=0, command=lambda: self.clear())
-        button.grid(row=0, column=4, sticky=tk.NSEW, padx=5, pady=5)
+        self.MS.grid(row=0, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
         # 2η γραμμή κουμπιών
-        button = tk.Button(self.buttons_frame, text='exp',
+        self.EXP = tk.Button(self.buttons_frame, text='exp',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.exponent)
-        button.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
+        self.EXP.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='!x',
+        self.FACTORIAL = tk.Button(self.buttons_frame, text='!x',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.factorial)
-        button.grid(row=1, column=1, sticky=tk.NSEW, padx=5, pady=5)
+        self.FACTORIAL.grid(row=1, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='sin',
+        self.SIN = tk.Button(self.buttons_frame, text='sin',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.sin)
-        button.grid(row=1, column=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.SIN.grid(row=1, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text="cos", bg='#c9c5ab',
+        self.COS = tk.Button(self.buttons_frame, text="cos", bg='#c9c5ab',
                            fg=OPERATION_COLOR, font=DEDICATED_BUTTONS_FONT,
                            borderwidth=0, command=self.cos)
-        button.grid(row=1, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.COS.grid(row=1, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text="tan", bg='#c9c5ab',
+        self.TAN = tk.Button(self.buttons_frame, text="tan", bg='#c9c5ab',
                            fg=OPERATION_COLOR, font=DEDICATED_BUTTONS_FONT,
                            borderwidth=0, command=self.tan)
-        button.grid(row=1, column=4, sticky=tk.NSEW, padx=5, pady=5)
+        self.TAN.grid(row=1, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
 
         # 3η γραμμή κουμπιών
-        button = tk.Button(self.buttons_frame, text='1/x',
+        self.INVERSE = tk.Button(self.buttons_frame, text='1/x',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.inverse_number)
-        button.grid(row=2, column=0, sticky=tk.NSEW, padx=5, pady=5)
+        self.INVERSE.grid(row=2, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='x^2 ',
+        self.SQUARE = tk.Button(self.buttons_frame, text='x^2 ',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.square_number)
-        button.grid(row=2, column=1, sticky=tk.NSEW, padx=5, pady=5)
+        self.SQUARE.grid(row=2, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='√x',
+        self.SQROOT = tk.Button(self.buttons_frame, text='√x',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.square_root)
-        button.grid(row=2, column=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.SQROOT.grid(row=2, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='log',
+        self.LOG = tk.Button(self.buttons_frame, text='log',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.logarithm)
-        button.grid(row=2, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.LOG.grid(row=2, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='ln',
+        self.LN = tk.Button(self.buttons_frame, text='ln',
                            bg='#c9c5ab', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.natural_log)
-        button.grid(row=2, column=4, sticky=tk.NSEW, padx=5, pady=5)
+        self.LN.grid(row=2, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
         # 4η γραμμή κουμπιών
-        button = tk.Button(self.buttons_frame, text='DEL',
+        self.DEL = tk.Button(self.buttons_frame, text='DEL',
                            bg='#eda48c', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=self.delete)
-        button.grid(row=3, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.DEL.grid(row=3, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='AC',
+        self.AC = tk.Button(self.buttons_frame, text='AC',
                            bg='#eda48c', fg=OPERATION_COLOR,
                            font=DEDICATED_BUTTONS_FONT, borderwidth=0,
                            command=lambda: self.clear())
-        button.grid(row=3, column=4, sticky=tk.NSEW, padx=5, pady=5)
+        self.AC.grid(row=3, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
 
         # 5η γραμμή κουμπιών
-        button = tk.Button(self.buttons_frame, text='\u00D7',
+        self.MULTIPLY = tk.Button(self.buttons_frame, text='\u00D7',
                            bg='#4b5e5d', fg=WHITE,
                            font=DIGITS_FONT, borderwidth=0,
                            command=lambda x='x': self.append_operator(x))
-        button.grid(row=4, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.MULTIPLY.grid(row=4, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text='\u00F7',
+        self.DIVIDE = tk.Button(self.buttons_frame, text='\u00F7',
                            bg='#4b5e5d', fg=WHITE,
                            font=DIGITS_FONT, borderwidth=0,
                            command=lambda x='/': self.append_operator(x))
-        button.grid(row=4, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.DIVIDE.grid(row=4, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
 
         # 6η γραμμή κουμπιών
-        button = tk.Button(self.buttons_frame, text='+',
+        self.PLUS = tk.Button(self.buttons_frame, text='+',
                            bg='#4b5e5d', fg=WHITE,
                            font=DIGITS_FONT, borderwidth=0,
                            command=lambda x='+': self.append_operator(x))
-        button.grid(row=5, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.PLUS.grid(row=5, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
 
-        button = tk.Button(self.buttons_frame, text='-',
+        self.MINUS = tk.Button(self.buttons_frame, text='-',
                            bg='#4b5e5d', fg=WHITE,
                            font=DIGITS_FONT, borderwidth=0,
                            command=lambda x='-': self.append_operator(x))
-        button.grid(row=5, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.MINUS.grid(row=5, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
 
         # 7η γραμμή κουμπιών
-        button = tk.Button(self.buttons_frame, text="+/-", bg=WHITE,
+        self.PLUS_MINUS = tk.Button(self.buttons_frame, text="+/-", bg=WHITE, state='disabled',
                            fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.apply_sign)
-        button.grid(row=6, column=0, sticky=tk.NSEW, padx=5, pady=5)
+        self.PLUS_MINUS.grid(row=6, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text=".", bg=WHITE,
+        self.DOT = tk.Button(self.buttons_frame, text=".", bg=WHITE,
                            fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0,
                            command=lambda x='.': self.add_to_value(x))
-        button.grid(row=6, column=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.DOT.grid(row=6, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text="x10", bg="#4b5e5d",
+        self.INCREASE_ORDER = tk.Button(self.buttons_frame, text="x10", bg="#4b5e5d",
                            fg=WHITE, font=DIGITS_FONT, borderwidth=0,
                            command=self.increase_order)
-        button.grid(row=6, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.INCREASE_ORDER.grid(row=6, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
-        button = tk.Button(self.buttons_frame, text="=", bg="#0067c0",
+        self.EQUAL = tk.Button(self.buttons_frame, text="=", bg="#0067c0",
                            fg=WHITE, font=DIGITS_FONT, borderwidth=0, command=self.evaluate)
-        button.grid(row=6, column=4, sticky=tk.NSEW, padx=5, pady=5)
+        self.EQUAL.grid(row=6, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
 
     def clear(self):
-        print(font.families())
         self.current_value = "0"
         self.total_value = ""
         self.update_current_value()
         self.update_total_value()
+        self.isDecimal = False
+        self.DOT['state'] = 'normal'
 
 
     def evaluate(self):
-        print('Evaluating')
+        self.DOT['state'] = 'normal'
+        self.enable_operators()
         if self.error:
             self.current_value = '0'
             self.update_current_value()
@@ -417,6 +463,7 @@ class Calculator:
         try:
             self.current_value = str(np.math.factorial(int(self.current_value)))
         except ValueError:
+            self.disable_operators()
             self.error = True
             self.current_value = 'Must be an integer'
         self.update_current_value()
@@ -451,6 +498,48 @@ class Calculator:
         self.current_value = str(np.log(float(self.current_value)))
         self.update_current_value()
         self.update_total_value()
+
+
+    def disable_operators(self):
+        self.PLUS['state'] = 'disabled'
+        self.MINUS['state'] = 'disabled'
+        self.DIVIDE['state'] = 'disabled'
+        self.MULTIPLY['state'] = 'disabled'
+        self.DOT['state'] = 'disabled'
+        self.DEL['state'] = 'disabled'
+        self.INCREASE_ORDER['state'] = 'disabled'
+        self.INVERSE['state'] = 'disabled'
+        self.LOG['state'] = 'disabled'
+        self.LN['state'] = 'disabled'
+        self.COS['state'] = 'disabled'
+        self.SIN['state'] = 'disabled'
+        self.TAN['state'] = 'disabled'
+        self.SQROOT['state'] = 'disabled'
+        self.SQUARE['state'] = 'disabled'
+        self.EXP['state'] = 'disabled'
+        self.FACTORIAL['state'] = 'disabled'
+        self.PLUS_MINUS['state'] = 'disabled'
+
+
+    def enable_operators(self):
+        self.PLUS_MINUS['state'] = 'normal'
+        self.DOT['state'] = 'normal'
+        self.PLUS['state'] = 'normal'
+        self.MINUS['state'] = 'normal'
+        self.DIVIDE['state'] = 'normal'
+        self.MULTIPLY['state'] = 'normal'
+        self.DOT['state'] = 'normal'
+        self.DEL['state'] = 'normal'
+        self.INCREASE_ORDER['state'] = 'normal'
+        self.INVERSE['state'] = 'normal'
+        self.LOG['state'] = 'normal'
+        self.LN['state'] = 'normal'
+        self.COS['state'] = 'normal'
+        self.SIN['state'] = 'normal'
+        self.TAN['state'] = 'normal'
+        self.SQROOT['state'] = 'normal'
+        self.SQUARE['state'] = 'normal'
+        self.EXP['state'] = 'normal'
 
     def run(self):
         self.window.mainloop()
