@@ -1,24 +1,78 @@
+# ------------------------------------------
+# ---        PROJECT: CALCULATOR         ---
+# ------------------------------------------
+# Περιγραφή
+# ------------------------------------------
+# Δημιουργία calculator στα πλαίσια την
+# εργασίας της ενότητας ΠΛΗΠΡΟ του ΕΑΠ.
+# ------------------------------------------
+# Δημιουργήθηκε στις: 4/2022
+# Τελευταία ενημέρωση: 5/6/2022
+# ------------------------------------------
+# Authors:
+# ΣΚΡΕΚΑΣ ΠΑΣΧΑΛΗΣ
+# ΒΕΡΓΟΥ ΝΙΚΙ
+# ΚΑΤΕΡΙΝΑ
+# ΑΓΡΙΓΙΑΝΝΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ
+# ------------------------------------------
+
+
+# ------------------------------------------
+# ---       ΕΙΣΑΓΩΓΗ ΒΙΒΛΙΟΘΗΚΩΝ         ---
+# ------------------------------------------
 import tkinter as tk
 from tkinter import font
 import numpy as np
 
 
-# Constants
+# ------------------------------------------
+# ---        CONSTANT VARIABLES          ---
+# ------------------------------------------
+# Σταθερές μεταβλητές σχετικά με την εμφάνιση του GUI
+
+# Το font-family του calculator
 font_family = "Calibri"
+# Το χρώμα του background του calculator
 BACKGROUND_COLOR = "#dbdbdb"
+# Το χρώμα των πλήκτρων ψηφίων του calculator
 SCREEN_DIGIT_COLOR = "#335de8"
 
-DEDICATED_BUTTONS_FONT = (font_family, 13)
 
+# ------------------------------------------
+# ---               FONTS                ---
+# ------------------------------------------
+# Μικρό font για το label που εκφράζει την πράξη (επάνω label στο frame υπολογισμών)
 SMALL_FONT = (font_family, 16)
+# Μεγάλο font για το label που ορίζεται από την πληκτρολόγηση ψηφίων (κάτω label στο frame υπολογισμών)
 LARGE_FONT = (font_family, 22, "bold")
-WHITE = "#FFFFFF"
+
+# Font για το κουμπί x10 (INCREASE ORDER BUTTON)
+INCREASE_ORDER_BUTTON_FONT = (font_family, 13)
+
+# Font για τα πλήκτρα ψηφίων του calculator
 DIGITS_FONT = (font_family, 16, "normal")
-DIGITS_COLOR = "#595858"
+
+# Font για τα ψηφία (0-9 και '.')
 OPERATIONS_FONT = (font_family, 20)
+
+# Font για τα κουμπιά διαφόρων λειτουργιών (π.χ. log, ln , cos κτλ).
+FUNCTIONS_FONT = (font_family, 13)
+
+
+# ------------------------------------------
+# ---           COLORS/ΧΡΩΜΑΤΑ           ---
+# ------------------------------------------
+# Σταθερές που αντιπροσωπεύουν χρώματα
+# Άσπρο χρώμα (χρησιμοποιείται στο υπόβαθρο των πλήκτρων ψηφίων)
+WHITE = "#FFFFFF"
+# Χρώμα που χρησιμοποιείται στο κείμενο/text των πλήκτρων ψηφίων (π.χ. 0, 1)
+DIGITS_COLOR = "#595858"
+# Χρώμα που χρησιμοποιείται στο κείμενο/text των πλήκτρων functions (π.χ. log, cos, exp κλπ)
 OPERATION_COLOR = "#4f2121"
 
-
+# ------------------------------------------
+# ---          ΚΛΑΣΗ CALCULATOR          ---
+# ------------------------------------------
 class Calculator:
 
     # Μέθοδος αρχικοποίησης των αντικειμένων της κλάσης τύπου Calculator
@@ -187,103 +241,103 @@ class Calculator:
     def create_other_buttons(self):
         # 1η γραμμή κουμπιών
         self.MC = button = tk.Button(self.buttons_frame, text='MC',
-                           bg='#ebdec0', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0)
+                                     bg='#ebdec0', fg=OPERATION_COLOR,
+                                     font=FUNCTIONS_FONT, borderwidth=0)
         self.MC.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.MR = button = tk.Button(self.buttons_frame, text='MR',
-                           bg='#ebdec0', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0)
+                                     bg='#ebdec0', fg=OPERATION_COLOR,
+                                     font=FUNCTIONS_FONT, borderwidth=0)
         self.MR.grid(row=0, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
         self.M_plus = tk.Button(self.buttons_frame, text='M+',
-                           bg='#ebdec0', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0)
+                                bg='#ebdec0', fg=OPERATION_COLOR,
+                                font=FUNCTIONS_FONT, borderwidth=0)
         self.M_plus.grid(row=0, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.M_minus = tk.Button(self.buttons_frame, text='M-',
-                           bg='#ebdec0', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0)
+                                 bg='#ebdec0', fg=OPERATION_COLOR,
+                                 font=FUNCTIONS_FONT, borderwidth=0)
         self.M_minus.grid(row=0, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.MS = tk.Button(self.buttons_frame, text="MS",
-                           bg='#ebdec0', fg=DIGITS_COLOR,
-                           font=DEDICATED_BUTTONS_FONT,
-                           borderwidth=0, command=lambda: self.clear())
+                            bg='#ebdec0', fg=DIGITS_COLOR,
+                            font=FUNCTIONS_FONT,
+                            borderwidth=0, command=lambda: self.clear())
         self.MS.grid(row=0, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
         # 2η γραμμή κουμπιών
         self.EXP = tk.Button(self.buttons_frame, text='exp',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.exponent)
+                             bg='#c9c5ab', fg=OPERATION_COLOR,
+                             font=FUNCTIONS_FONT, borderwidth=0,
+                             command=self.exponent)
         self.EXP.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.FACTORIAL = tk.Button(self.buttons_frame, text='!x',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.factorial)
+                                   bg='#c9c5ab', fg=OPERATION_COLOR,
+                                   font=FUNCTIONS_FONT, borderwidth=0,
+                                   command=self.factorial)
         self.FACTORIAL.grid(row=1, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
         self.SIN = tk.Button(self.buttons_frame, text='sin',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.sin)
+                             bg='#c9c5ab', fg=OPERATION_COLOR,
+                             font=FUNCTIONS_FONT, borderwidth=0,
+                             command=self.sin)
         self.SIN.grid(row=1, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.COS = tk.Button(self.buttons_frame, text="cos", bg='#c9c5ab',
-                           fg=OPERATION_COLOR, font=DEDICATED_BUTTONS_FONT,
-                           borderwidth=0, command=self.cos)
+                             fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
+                             borderwidth=0, command=self.cos)
         self.COS.grid(row=1, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.TAN = tk.Button(self.buttons_frame, text="tan", bg='#c9c5ab',
-                           fg=OPERATION_COLOR, font=DEDICATED_BUTTONS_FONT,
-                           borderwidth=0, command=self.tan)
+                             fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
+                             borderwidth=0, command=self.tan)
         self.TAN.grid(row=1, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
 
         # 3η γραμμή κουμπιών
         self.INVERSE = tk.Button(self.buttons_frame, text='1/x',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.inverse_number)
+                                 bg='#c9c5ab', fg=OPERATION_COLOR,
+                                 font=FUNCTIONS_FONT, borderwidth=0,
+                                 command=self.inverse_number)
         self.INVERSE.grid(row=2, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.SQUARE = tk.Button(self.buttons_frame, text='x^2 ',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.square_number)
+                                bg='#c9c5ab', fg=OPERATION_COLOR,
+                                font=FUNCTIONS_FONT, borderwidth=0,
+                                command=self.square_number)
         self.SQUARE.grid(row=2, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
         self.SQROOT = tk.Button(self.buttons_frame, text='√x',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.square_root)
+                                bg='#c9c5ab', fg=OPERATION_COLOR,
+                                font=FUNCTIONS_FONT, borderwidth=0,
+                                command=self.square_root)
         self.SQROOT.grid(row=2, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.LOG = tk.Button(self.buttons_frame, text='log',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.logarithm)
+                             bg='#c9c5ab', fg=OPERATION_COLOR,
+                             font=FUNCTIONS_FONT, borderwidth=0,
+                             command=self.logarithm)
         self.LOG.grid(row=2, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.LN = tk.Button(self.buttons_frame, text='ln',
-                           bg='#c9c5ab', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.natural_log)
+                            bg='#c9c5ab', fg=OPERATION_COLOR,
+                            font=FUNCTIONS_FONT, borderwidth=0,
+                            command=self.natural_log)
         self.LN.grid(row=2, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
         # 4η γραμμή κουμπιών
         self.DEL = tk.Button(self.buttons_frame, text='DEL',
-                           bg='#eda48c', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=self.delete)
+                             bg='#eda48c', fg=OPERATION_COLOR,
+                             font=FUNCTIONS_FONT, borderwidth=0,
+                             command=self.delete)
         self.DEL.grid(row=3, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.AC = tk.Button(self.buttons_frame, text='AC',
-                           bg='#eda48c', fg=OPERATION_COLOR,
-                           font=DEDICATED_BUTTONS_FONT, borderwidth=0,
-                           command=lambda: self.clear())
+                            bg='#eda48c', fg=OPERATION_COLOR,
+                            font=FUNCTIONS_FONT, borderwidth=0,
+                            command=lambda: self.clear())
         self.AC.grid(row=3, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
 
@@ -325,7 +379,7 @@ class Calculator:
         self.DOT.grid(row=6, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.INCREASE_ORDER = tk.Button(self.buttons_frame, text="x10", bg="#4b5e5d",
-                           fg=WHITE, font=DIGITS_FONT, borderwidth=0,
+                           fg=WHITE, font=INCREASE_ORDER_BUTTON_FONT, borderwidth=0,
                            command=self.increase_order)
         self.INCREASE_ORDER.grid(row=6, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
