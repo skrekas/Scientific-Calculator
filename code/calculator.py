@@ -7,12 +7,12 @@
 # εργασίας της ενότητας ΠΛΗΠΡΟ του ΕΑΠ.
 # ------------------------------------------
 # Δημιουργήθηκε στις: 4/2022
-# Τελευταία ενημέρωση: 5/6/2022
+# Τελευταία ενημέρωση: 12/6/2022
 # ------------------------------------------
 # Authors:
 # ΣΚΡΕΚΑΣ ΠΑΣΧΑΛΗΣ
 # ΒΕΡΓΟΥ ΝΙΚΙ
-# ΚΑΤΕΡΙΝΑ
+# ΚΑΤΕΡΙΝΑ ΚΑΚΙΩΡΗ
 # ΑΓΡΙΓΙΑΝΝΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ
 # ------------------------------------------
 
@@ -130,6 +130,8 @@ class Calculator:
         self.INCREASE_ORDER = None
         self.EQUAL = None
 
+        self.memory = None
+
         # Dictionary για την αποθήκευση των ψηφίων του calculator
         # Η χρήση dictionary βοηθά στον ορισμό των ψηφίων του calculator
         # μέσω μιας δομής επανάληψης for για την αποφυγή επανάληψης κώδικα.
@@ -139,11 +141,15 @@ class Calculator:
         # το οποίο χρησιμοποιείται παρακάτω για την τοποθέτηση των ψηφίων στο παράθυρο της
         # εφαρμογής
         self.digits = {
-            7: (3, 0), 8: (3, 1), 9: (3, 2),
-            4: (4, 0), 5: (4, 1), 6: (4, 2),
-            3: (5, 2), 2: (5, 1), 1: (5, 0),
-            0: (6, 1)
+            7: (5, 0), 8: (5, 1), 9: (5, 2),
+            4: (6, 0), 5: (6, 1), 6: (6, 2),
+            3: (7, 2), 2: (7, 1), 1: (7, 0),
+            0: (8, 1)
         }
+
+        # Ορίζoυμε ένα λεξικό με τα σύμβολα για τις βασικές πράξεις για να το χρησιμοποιήσουμε στη συνάρτηση
+        # που θα ενεργοποιεί και το πληκτρολόγιο για την εισοδο στοιχείων, 11-6-2022
+        self.basic_operators = {"/": "\u00F7", "x": "\u00D7", "-": "-", "+": "+"}
 
         self.total_value = ""
         self.current_value = "0"
@@ -157,7 +163,7 @@ class Calculator:
 
         # Καθορισμός του βάρους των γραμμών και των στύλων
         # του grid κουμπιών (ισοκατανομή)
-        for i in range(7):
+        for i in range(9):
             self.buttons_frame.rowconfigure(i, weight=1, pad=0)
 
         for i in range(5):
@@ -166,6 +172,9 @@ class Calculator:
         # Καλώ τις συναρτήσεις για την δημιουργία των κουμπιών στο GUI
         self.create_digit_buttons()
         self.create_other_buttons()
+        # Καλώ συνάρτηση για χρήση απο πληκτρολόγιο.Για τον πολλαπλασιασμό πρέπει να πατάμε το αγγλικό
+        # γράμμα x
+        self.keyboard()
 
     # Συνάρτηση που δημιουργεί τα κείμενα (labels) τα οποία σχηματίζουν τους
     # αριθμούς και τις πράξεις. Η συνάρτηση επιστρέφει τα κείμενα
@@ -238,155 +247,217 @@ class Calculator:
         self.update_current_value()
         self.DOT['state'] = 'normal'
 
+        # Συνάρτηση για λειτουργία και απο το πληκτρολόγιο
+    def keyboard(self):
+        self.window.bind("<Return>", lambda result: self.evaluate())
+        for key in self.digits:
+                self.window.bind(str(key), lambda result, digit=key: self.add_to_value(digit))
+        for key in self.basic_operators:
+                self.window.bind(key, lambda result, operator=key: self.append_operator(operator))
+
     def create_other_buttons(self):
-        # 1η γραμμή κουμπιών
+        # 1η γραμμή κουμπιών TO DO
         self.MC = button = tk.Button(self.buttons_frame, text='MC',
                                      bg='#ebdec0', fg=OPERATION_COLOR,
-                                     font=FUNCTIONS_FONT, borderwidth=0)
+                                     font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_clear())
         self.MC.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.MR = button = tk.Button(self.buttons_frame, text='MR',
                                      bg='#ebdec0', fg=OPERATION_COLOR,
-                                     font=FUNCTIONS_FONT, borderwidth=0)
+                                     font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_recal())
         self.MR.grid(row=0, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
         self.M_plus = tk.Button(self.buttons_frame, text='M+',
                                 bg='#ebdec0', fg=OPERATION_COLOR,
-                                font=FUNCTIONS_FONT, borderwidth=0)
+                                font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_add(self.current_value))
         self.M_plus.grid(row=0, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
-        self.M_minus = tk.Button(self.buttons_frame, text='M-',
-                                 bg='#ebdec0', fg=OPERATION_COLOR,
-                                 font=FUNCTIONS_FONT, borderwidth=0)
-        self.M_minus.grid(row=0, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.DEG_TO_RAD = tk.Button(self.buttons_frame, text='Deg->Rad',
+                                 bg='#c9c5ab', fg=OPERATION_COLOR,
+                                 font=FUNCTIONS_FONT, borderwidth=0,command=self.deg_to_rad)
+        self.DEG_TO_RAD.grid(row=0, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
-        self.MS = tk.Button(self.buttons_frame, text="MS",
-                            bg='#ebdec0', fg=DIGITS_COLOR,
+        self.PI = tk.Button(self.buttons_frame, text="π",
+                            bg='#c9c5ab', fg=DIGITS_COLOR,
                             font=FUNCTIONS_FONT,
-                            borderwidth=0, command=lambda: self.clear())
-        self.MS.grid(row=0, column=4, sticky=tk.NSEW, padx=5, pady=5)
+                            borderwidth=0,command=self.pi)
+        self.PI.grid(row=0, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
         # 2η γραμμή κουμπιών
+        self.TENPOWER = tk.Button(self.buttons_frame, text='\u0031\u0030\u02E3',
+                             bg='#c9c5ab', fg=OPERATION_COLOR,
+                             font=FUNCTIONS_FONT, borderwidth=0,
+                             command= self.ten_power)
+        self.TENPOWER.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
+        #TO DO
+        self.NPOWER = tk.Button(self.buttons_frame, text='x\u02b8',
+                                   bg='#c9c5ab', fg=OPERATION_COLOR,
+                                   font=FUNCTIONS_FONT, borderwidth=0, command=lambda:self.add_to_value(" ^ "))
+        self.NPOWER.grid(row=1, column=1, sticky=tk.NSEW, padx=5, pady=5)
+        #TO DO
+        self.NthROOT = tk.Button(self.buttons_frame, text="\u02b8\u221Ax",
+                                 bg='#c9c5ab', fg=OPERATION_COLOR,
+                                 font=FUNCTIONS_FONT, borderwidth=0, command=lambda:self.add_to_value(" R "))
+        self.NthROOT.grid(row=1, column=2, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.RAD_TO_DEG = tk.Button(self.buttons_frame, text="Rad->Deg", bg='#c9c5ab',
+                             fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
+                             borderwidth=0,command=self.rad_to_deg )
+        self.RAD_TO_DEG.grid(row=1, column=3, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.PRECENT = tk.Button(self.buttons_frame, text="%", bg='#c9c5ab',
+                             fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
+                             borderwidth=0, command=self.precent)
+        self.PRECENT.grid(row=1, column=4, sticky=tk.NSEW, padx=5, pady=5)
+
+        #3η γραμμή κουμπιών
+
+        self.MOD = tk.Button(self.buttons_frame, text='MOD',
+                             bg='#c9c5ab', fg=OPERATION_COLOR,
+                             font=FUNCTIONS_FONT, borderwidth=0,
+                             )
+        self.MOD.grid(row=2, column=0, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.ABSOLUTE = tk.Button(self.buttons_frame, text='|x|',
+                                   bg='#c9c5ab', fg=OPERATION_COLOR,
+                                   font=FUNCTIONS_FONT, borderwidth=0,
+                                   command=self.absolute)
+        self.ABSOLUTE.grid(row=2, column=1, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.ARCSIN = tk.Button(self.buttons_frame, text='sin-1',
+                             bg='#c9c5ab', fg=OPERATION_COLOR,
+                             font=FUNCTIONS_FONT, borderwidth=0,
+                             command=self.arcsin)
+        self.ARCSIN.grid(row=2, column=2, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.ARCCOS = tk.Button(self.buttons_frame, text="cos-1", bg='#c9c5ab',
+                             fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
+                             borderwidth=0, command=self.arccos)
+        self.ARCCOS.grid(row=2, column=3, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.ARCTAN = tk.Button(self.buttons_frame, text="tan-1", bg='#c9c5ab',
+                             fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
+                             borderwidth=0, command=self.arctan)
+        self.ARCTAN.grid(row=2, column=4, sticky=tk.NSEW, padx=5, pady=5)
+
+        # 4η γραμμή κουμπιών
         self.EXP = tk.Button(self.buttons_frame, text='exp',
                              bg='#c9c5ab', fg=OPERATION_COLOR,
                              font=FUNCTIONS_FONT, borderwidth=0,
                              command=self.exponent)
-        self.EXP.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
+        self.EXP.grid(row=3, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.FACTORIAL = tk.Button(self.buttons_frame, text='!x',
                                    bg='#c9c5ab', fg=OPERATION_COLOR,
                                    font=FUNCTIONS_FONT, borderwidth=0,
                                    command=self.factorial)
-        self.FACTORIAL.grid(row=1, column=1, sticky=tk.NSEW, padx=5, pady=5)
+        self.FACTORIAL.grid(row=3, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
         self.SIN = tk.Button(self.buttons_frame, text='sin',
                              bg='#c9c5ab', fg=OPERATION_COLOR,
                              font=FUNCTIONS_FONT, borderwidth=0,
                              command=self.sin)
-        self.SIN.grid(row=1, column=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.SIN.grid(row=3, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.COS = tk.Button(self.buttons_frame, text="cos", bg='#c9c5ab',
                              fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
                              borderwidth=0, command=self.cos)
-        self.COS.grid(row=1, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.COS.grid(row=3, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.TAN = tk.Button(self.buttons_frame, text="tan", bg='#c9c5ab',
                              fg=OPERATION_COLOR, font=FUNCTIONS_FONT,
                              borderwidth=0, command=self.tan)
-        self.TAN.grid(row=1, column=4, sticky=tk.NSEW, padx=5, pady=5)
+        self.TAN.grid(row=3, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
 
-        # 3η γραμμή κουμπιών
+        # 5η γραμμή κουμπιών
         self.INVERSE = tk.Button(self.buttons_frame, text='1/x',
                                  bg='#c9c5ab', fg=OPERATION_COLOR,
                                  font=FUNCTIONS_FONT, borderwidth=0,
                                  command=self.inverse_number)
-        self.INVERSE.grid(row=2, column=0, sticky=tk.NSEW, padx=5, pady=5)
+        self.INVERSE.grid(row=4, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
-        self.SQUARE = tk.Button(self.buttons_frame, text='x^2 ',
+        self.SQUARE = tk.Button(self.buttons_frame, text='x\u00b2',#11-6-2022
                                 bg='#c9c5ab', fg=OPERATION_COLOR,
                                 font=FUNCTIONS_FONT, borderwidth=0,
                                 command=self.square_number)
-        self.SQUARE.grid(row=2, column=1, sticky=tk.NSEW, padx=5, pady=5)
+        self.SQUARE.grid(row=4, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
         self.SQROOT = tk.Button(self.buttons_frame, text='√x',
                                 bg='#c9c5ab', fg=OPERATION_COLOR,
                                 font=FUNCTIONS_FONT, borderwidth=0,
                                 command=self.square_root)
-        self.SQROOT.grid(row=2, column=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.SQROOT.grid(row=4, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.LOG = tk.Button(self.buttons_frame, text='log',
                              bg='#c9c5ab', fg=OPERATION_COLOR,
                              font=FUNCTIONS_FONT, borderwidth=0,
                              command=self.logarithm)
-        self.LOG.grid(row=2, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.LOG.grid(row=4, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.LN = tk.Button(self.buttons_frame, text='ln',
                             bg='#c9c5ab', fg=OPERATION_COLOR,
                             font=FUNCTIONS_FONT, borderwidth=0,
                             command=self.natural_log)
-        self.LN.grid(row=2, column=4, sticky=tk.NSEW, padx=5, pady=5)
+        self.LN.grid(row=4, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
-        # 4η γραμμή κουμπιών
+        # 6η γραμμή κουμπιών
         self.DEL = tk.Button(self.buttons_frame, text='DEL',
                              bg='#eda48c', fg=OPERATION_COLOR,
                              font=FUNCTIONS_FONT, borderwidth=0,
                              command=self.delete)
-        self.DEL.grid(row=3, column=3, sticky=tk.NSEW, padx=5, pady=5)
+        self.DEL.grid(row=5, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.AC = tk.Button(self.buttons_frame, text='AC',
                             bg='#eda48c', fg=OPERATION_COLOR,
                             font=FUNCTIONS_FONT, borderwidth=0,
                             command=lambda: self.clear())
-        self.AC.grid(row=3, column=4, sticky=tk.NSEW, padx=5, pady=5)
-
-
-        # 5η γραμμή κουμπιών
-        self.MULTIPLY = tk.Button(self.buttons_frame, text='\u00D7',
-                           bg='#4b5e5d', fg=WHITE,
-                           font=DIGITS_FONT, borderwidth=0,
-                           command=lambda x='x': self.append_operator(x))
-        self.MULTIPLY.grid(row=4, column=3, sticky=tk.NSEW, padx=5, pady=5)
-
-        self.DIVIDE = tk.Button(self.buttons_frame, text='\u00F7',
-                           bg='#4b5e5d', fg=WHITE,
-                           font=DIGITS_FONT, borderwidth=0,
-                           command=lambda x='/': self.append_operator(x))
-        self.DIVIDE.grid(row=4, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
-
-        # 6η γραμμή κουμπιών
-        self.PLUS = tk.Button(self.buttons_frame, text='+',
-                           bg='#4b5e5d', fg=WHITE,
-                           font=DIGITS_FONT, borderwidth=0,
-                           command=lambda x='+': self.append_operator(x))
-        self.PLUS.grid(row=5, column=3, sticky=tk.NSEW, padx=5, pady=5)
-
-
-        self.MINUS = tk.Button(self.buttons_frame, text='-',
-                           bg='#4b5e5d', fg=WHITE,
-                           font=DIGITS_FONT, borderwidth=0,
-                           command=lambda x='-': self.append_operator(x))
-        self.MINUS.grid(row=5, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
+        self.AC.grid(row=5, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
         # 7η γραμμή κουμπιών
+        self.MULTIPLY = tk.Button(self.buttons_frame, text='\u00D7',
+                                  bg='#4b5e5d', fg=WHITE,
+                                  font=DIGITS_FONT, borderwidth=0,
+                                  command=lambda x='x': self.append_operator(x))
+        self.MULTIPLY.grid(row=6, column=3, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.DIVIDE = tk.Button(self.buttons_frame, text='\u00F7',
+                                bg='#4b5e5d', fg=WHITE,
+                                font=DIGITS_FONT, borderwidth=0,
+                                command=lambda x='/': self.append_operator(x))
+        self.DIVIDE.grid(row=6, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
+
+        # 8η γραμμή κουμπιών
+        self.PLUS = tk.Button(self.buttons_frame, text='+',
+                              bg='#4b5e5d', fg=WHITE,
+                              font=DIGITS_FONT, borderwidth=0,
+                              command=lambda x='+': self.append_operator(x))
+        self.PLUS.grid(row=7, column=3, sticky=tk.NSEW, padx=5, pady=5)
+
+        self.MINUS = tk.Button(self.buttons_frame, text='-',
+                               bg='#4b5e5d', fg=WHITE,
+                               font=DIGITS_FONT, borderwidth=0,
+                               command=lambda x='-': self.append_operator(x))
+        self.MINUS.grid(row=7, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
+
+        # 8η γραμμή κουμπιών
         self.PLUS_MINUS = tk.Button(self.buttons_frame, text="+/-", bg=WHITE, state='disabled',
-                           fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.apply_sign)
-        self.PLUS_MINUS.grid(row=6, column=0, sticky=tk.NSEW, padx=5, pady=5)
+                                    fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.apply_sign)
+        self.PLUS_MINUS.grid(row=8, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.DOT = tk.Button(self.buttons_frame, text=".", bg=WHITE,
-                           fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0,
-                           command=lambda x='.': self.add_to_value(x))
-        self.DOT.grid(row=6, column=2, sticky=tk.NSEW, padx=5, pady=5)
+                             fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0,
+                             command=lambda x='.': self.add_to_value(x))
+        self.DOT.grid(row=8, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.INCREASE_ORDER = tk.Button(self.buttons_frame, text="x10", bg="#4b5e5d",
-                           fg=WHITE, font=INCREASE_ORDER_BUTTON_FONT, borderwidth=0,
-                           command=self.increase_order)
-        self.INCREASE_ORDER.grid(row=6, column=3, sticky=tk.NSEW, padx=5, pady=5)
+                                        fg=WHITE, font=INCREASE_ORDER_BUTTON_FONT, borderwidth=0,
+                                        command=self.increase_order)
+        self.INCREASE_ORDER.grid(row=8, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.EQUAL = tk.Button(self.buttons_frame, text="=", bg="#0067c0",
-                           fg=WHITE, font=DIGITS_FONT, borderwidth=0, command=self.evaluate)
-        self.EQUAL.grid(row=6, column=4, sticky=tk.NSEW, padx=5, pady=5)
-
+                               fg=WHITE, font=DIGITS_FONT, borderwidth=0, command=self.evaluate)
+        self.EQUAL.grid(row=8, column=4, sticky=tk.NSEW, padx=5, pady=5)
 
     def clear(self):
         self.current_value = "0"
@@ -400,33 +471,34 @@ class Calculator:
     def evaluate(self):
         self.DOT['state'] = 'normal'
         self.enable_operators()
-        if self.error:
-            self.current_value = '0'
-            self.update_current_value()
-            self.update_total_value()
-            self.error = False
-        else:
-            if self.current_value == '0':
-                pass
-            else:
-                self.total_value += self.current_value + ' ='
-                self.update_total_value()
-                components = self.total_value.split(" ")
-                print(components)
-                if components[1] == "x":
-                        self.current_value = str(eval(components[0] + "*" + components[2]))
-                elif components[1] == "/":
-                    if components[2] == '0':
+
+        self.total_value += self.current_value + ' ='
+        self.update_total_value()
+        components = self.total_value.split(" ")
+        print(components)
+        if components[1] == "x":
+                    self.current_value = str(eval(components[0] + "*" + components[2]))
+        elif components[1] == "/":# 11-6-2022 ελεγχος διαιρεσης με 0
+                    if components[2] != "0":
+                        self.current_value = str(eval(components[0] + "/" + components[2]))
+                    else:
                         self.error = True
                         self.current_value = 'Cannot divide by zero'
-                    else:
-                        self.current_value = str(eval(components[0] + "/" + components[2]))
-                elif components[1] == "+":
-                    self.current_value = str(eval(components[0] + "+" + components[2]))
-                elif components[1] == "-":
-                    self.current_value = str(eval(components[0] + "-" + components[2]))
-                self.total_value = ""
-                self.update_current_value()
+                    self.update_current_value()
+                    self.total_value = ""
+        elif components[1] == "+":
+            self.current_value = str(eval(components[0] + "+" + components[2]))
+        elif components[1] == "-":
+            self.current_value = str(eval(components[0] + "-" + components[2]))
+        elif components[1] == "^":
+            print("Raising to power")
+            self.current_value = str(np.power(eval(components[0]), eval(components[2])))
+        elif components[1] == "R":
+            self.current_value = str(np.power(eval(components[0]), 1 / eval(components[2])))
+
+        self.total_value = ""
+        self.update_current_value()
+
 
     def create_equals_button(self):
         button = tk.Button(self.buttons_frame, text="=", bg="#0067c0",
@@ -460,8 +532,11 @@ class Calculator:
     def update_current_value(self):
         self.current_value_lbl.config(text=self.current_value)
 
-    def inverse_number(self):
-        self.current_value = str(1.0/float(self.current_value))
+    def inverse_number(self):# Έλεγχος για διαίρεση με το μηδέν 11-6-2022
+        try:
+            self.current_value = str(1.0 / float(self.current_value))
+        except ZeroDivisionError:
+            self.current_value="Cannot divide by zero"
         self.update_current_value()
         self.update_total_value()
 
@@ -525,19 +600,28 @@ class Calculator:
 
     def sin(self):
         self.total_value = f"sin({self.current_value}) ="
-        self.current_value = str(np.sin(float(self.current_value)))
+        self.current_value = str(np.sin(float(self.current_value)*np.pi/180))#Πολλαπλασιαζω με np.pi/180 για να παρω
+                                                                                #αποτελεσμα σε radians 11-6-2022
         self.update_current_value()
         self.update_total_value()
 
-    def cos(self):
+    def cos(self):# κανω στρογγυλοποιηση ετσι ωστε το cos(60)=0.5 & cos(90)=0 με χρηση της np.round#11-6-22
         self.total_value = f"cos({self.current_value}) ="
-        self.current_value = str(np.cos(float(self.current_value)))
+        if (self.current_value=="60" or self.current_value=="90"):
+            self.current_value =str(np.round((np.cos(float(self.current_value)*np.pi/180)),2))
+        else:
+            self.current_value = str(np.cos(float(self.current_value) * np.pi / 180))
         self.update_current_value()
         self.update_total_value()
 
-    def tan(self):
+    def tan(self):#Υπολογίζουμε την εφαπτομένη tan προσέχοντας οτι tan(90)δεν ορίζεται και οτι tan(45)=1#11-6-22
         self.total_value = f"tan({self.current_value}) ="
-        self.current_value = str(np.tan(float(self.current_value)))
+        if self.current_value=="90":
+            self.current_value ="Invalid input"
+        elif self.current_value == "45":
+            self.current_value = str(np.round((np.tan(float(self.current_value) * np.pi / 180)), 2))
+        else:
+            self.current_value = str(np.tan(float(self.current_value) * np.pi / 180))
         self.update_current_value()
         self.update_total_value()
 
@@ -552,6 +636,68 @@ class Calculator:
         self.current_value = str(np.log(float(self.current_value)))
         self.update_current_value()
         self.update_total_value()
+
+    def pi(self): #11-6-2022
+        self.total_value = str(np.pi)
+        self.update_current_value()
+        self.update_total_value()
+
+    def precent(self): #11-6-22 Υπολογισμός ποσοστού
+        self.current_value = str(float(self.current_value)*0.01)
+        self.update_current_value()
+        self.update_total_value()
+
+    def rad_to_deg(self):#μετατροπή rad to degrees με χρήση της numpy.rad2deg
+        self.current_value = str(np.rad2deg(float(self.current_value)))
+        self.update_current_value()
+        self.update_total_value()
+
+    def deg_to_rad(self):#μετατροπή rad to degrees με χρήση της numpy.deg2rad
+        self.current_value = str(np.deg2rad(float(self.current_value)))
+        self.update_current_value()
+        self.update_total_value()
+
+    def ten_power(self):#αποτελέσματα για δυνάμεις του 10
+        self.current_value = str(10 ** (int(self.current_value)))
+        self.update_current_value()
+        self.update_total_value()
+
+    def arcsin(self):#Υπολογισμός τοξου sin
+        self.current_value =str(np.arcsin(float(self.current_value)))
+        self.update_current_value()
+        self.update_total_value()
+
+    def arccos(self):#Yπολογισμός τόξου cos
+        self.current_value =str(np.arccos(float(self.current_value)))
+        self.update_current_value()
+        self.update_total_value()
+
+    def arctan(self):#Υπολογισμός τόξου tan
+        self.current_value =str(np.arctan(float(self.current_value)))
+        self.update_current_value()
+        self.update_total_value()
+
+    def absolute(self):#Υπολογισμός απόλυτης τιμής
+        self.current_value = str(np.abs(float(self.current_value)))
+        self.update_current_value()
+        self.update_total_value()
+
+    def memory_clear(self):
+        self.memory = None
+        print(f"Value in memory {self.memory}")
+
+    def memory_add(self, val):
+        self.memory = val
+        print(f"Value in memory {self.memory}")
+
+    def memory_recal(self):
+        if self.memory:
+            self.current_value = self.memory
+            self.update_current_value()
+        else:
+            pass
+        print(f"Value in memory {self.memory}")
+
 
 
     def disable_operators(self):
@@ -573,6 +719,7 @@ class Calculator:
         self.EXP['state'] = 'disabled'
         self.FACTORIAL['state'] = 'disabled'
         self.PLUS_MINUS['state'] = 'disabled'
+        self.MOD['state'] = 'disable'
 
 
     def enable_operators(self):
@@ -594,10 +741,10 @@ class Calculator:
         self.SQROOT['state'] = 'normal'
         self.SQUARE['state'] = 'normal'
         self.EXP['state'] = 'normal'
+        self.MOD['state'] = 'normal'
 
     def run(self):
         self.window.mainloop()
-
 
 if __name__ == "__main__":
     calc = Calculator()
