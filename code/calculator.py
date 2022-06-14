@@ -259,17 +259,17 @@ class Calculator:
         # 1η γραμμή κουμπιών TO DO
         self.MC = button = tk.Button(self.buttons_frame, text='MC',
                                      bg='#ebdec0', fg=OPERATION_COLOR,
-                                     font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_clear())
+                                     font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_clear)
         self.MC.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.MR = button = tk.Button(self.buttons_frame, text='MR',
                                      bg='#ebdec0', fg=OPERATION_COLOR,
-                                     font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_recal())
+                                     font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_recal)
         self.MR.grid(row=0, column=1, sticky=tk.NSEW, padx=5, pady=5)
 
         self.M_plus = tk.Button(self.buttons_frame, text='M+',
                                 bg='#ebdec0', fg=OPERATION_COLOR,
-                                font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_add(self.current_value))
+                                font=FUNCTIONS_FONT, borderwidth=0, command=lambda: self.memory_add(self.current_value))
         self.M_plus.grid(row=0, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.DEG_TO_RAD = tk.Button(self.buttons_frame, text='Deg->Rad',
