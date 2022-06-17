@@ -533,7 +533,7 @@ class Calculator:
     def update_current_value(self):
         self.current_value_lbl.config(text=self.current_value)
 
-    def inverse_number(self):# Έλεγχος για διαίρεση με το μηδέν 11-6-2022
+    def inverse_number(self):# Έλεγχος για διαίρεση με το μηδέν 
         try:
             self.current_value = str(1.0 / float(self.current_value))
         except ZeroDivisionError:
