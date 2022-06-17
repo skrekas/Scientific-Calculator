@@ -425,7 +425,7 @@ class Calculator:
                                command=lambda x='-': self.append_operator(x))
         self.MINUS.grid(row=7, column=4, columnspan=2, sticky=tk.NSEW, padx=5, pady=5)
 
-        # 8η γραμμή κουμπιών
+        # 9η γραμμή κουμπιών
         self.PLUS_MINUS = tk.Button(self.buttons_frame, text="+/-", bg=WHITE, state='disabled',
                                     fg=DIGITS_COLOR, font=DIGITS_FONT, borderwidth=0, command=self.apply_sign)
         self.PLUS_MINUS.grid(row=8, column=0, sticky=tk.NSEW, padx=5, pady=5)
