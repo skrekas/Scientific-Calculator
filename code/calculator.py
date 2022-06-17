@@ -241,7 +241,7 @@ class Calculator:
                 self.window.bind(key, lambda result, operator=key: self.append_operator(operator))
 
     def create_other_buttons(self):
-        # 1η γραμμή κουμπιών TO DO
+        # 1η γραμμή κουμπιών
         self.MC = button = tk.Button(self.buttons_frame, text='MC',
                                      bg='#ebdec0', fg=OPERATION_COLOR,
                                      font=FUNCTIONS_FONT, borderwidth=0, command=self.memory_clear)
