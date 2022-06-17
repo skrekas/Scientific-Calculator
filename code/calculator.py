@@ -463,7 +463,7 @@ class Calculator:
 
         if components[1] == "x":
                     self.current_value = str(eval(components[0] + "*" + components[2]))
-        elif components[1] == "/":# 11-6-2022 ελεγχος διαιρεσης με 0
+        elif components[1] == "/":# ελεγχος διαιρεσης με 0
                     if components[2] != "0":
                         self.current_value = str(eval(components[0] + "/" + components[2]))
                     else:
@@ -624,12 +624,12 @@ class Calculator:
         self.update_current_value()
         self.update_total_value()
 
-    def pi(self): #11-6-2022
+    def pi(self): 
         self.total_value = str(np.pi)
         self.update_current_value()
         self.update_total_value()
 
-    def precent(self): #11-6-22 Υπολογισμός ποσοστού
+    def precent(self): # Υπολογισμός ποσοστού
         self.current_value = str(float(self.current_value)*0.01)
         self.update_current_value()
         self.update_total_value()
