@@ -189,7 +189,7 @@ class Calculator:
                                      fg=SCREEN_DIGIT_COLOR, padx=20, font=LARGE_FONT)
         current_value_lbl.pack(expand=True, fill="both"
 
-        return total_value_lbl, current_value_lbl, angle_mode_lbl
+        return total_value_lbl, current_value_lbl
 
     # Συνάρτηση που κατασκευάζει τον αριθμό κατά
     # την πληκτρολόγηση των ψηφίων
