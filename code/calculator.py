@@ -581,7 +581,7 @@ class Calculator:
         except ValueError:
             self.disable_operators()
             self.error = True
-            self.current_value = 'Must be an integer'
+            self.current_value = 'Must be a positive integer'
         self.update_current_value()
         self.update_total_value()
 
