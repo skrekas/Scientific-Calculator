@@ -208,7 +208,6 @@ class Calculator:
             self.current_value = ""
 
         if value == '.' and not self.isDecimal:
-            print('Setting isDecimal to True')
             self.isDecimal = True
             self.DOT['state'] = 'disabled'
         elif self.isDecimal:
@@ -475,7 +474,7 @@ class Calculator:
         self.total_value += self.current_value + ' ='
         self.update_total_value()
         components = self.total_value.split(" ")
-        print(components)
+
         if components[1] == "x":
                     self.current_value = str(eval(components[0] + "*" + components[2]))
         elif components[1] == "/":# 11-6-2022 ελεγχος διαιρεσης με 0
@@ -602,28 +601,28 @@ class Calculator:
 
     def sin(self):
         self.total_value = f"sin({self.current_value}\u00b0) ="
-        self.current_value = str(np.sin(float(self.current_value)*np.pi/180))#Πολλαπλασιαζω με np.pi/180 για να παρω
-                                                                                #αποτελεσμα σε radians 11-6-2022
-        self.update_current_value()
-        self.update_total_value()
-
-    def cos(self):# κανω στρογγυλοποιηση ετσι ωστε το cos(60)=0.5 & cos(90)=0 με χρηση της np.round#11-6-22
-        self.total_value = f"cos({self.current_value}) ="
-        if (self.current_value=="60" or self.current_value=="90"):
-            self.current_value =str(np.round((np.cos(float(self.current_value)*np.pi/180)),2))
+        if (self.current_value == "0" or self.current_value == "180" or self.current_value == "360"):
+            self.current_value = 0.0
         else:
-            self.current_value = str(np.cos(float(self.current_value) * np.pi / 180))
+            self.current_value = str(np.sin(float(self.current_value) * np.pi / 180))
         self.update_current_value()
         self.update_total_value()
 
-    def tan(self):#Υπολογίζουμε την εφαπτομένη tan προσέχοντας οτι tan(90)δεν ορίζεται και οτι tan(45)=1#11-6-22
-        self.total_value = f"tan({self.current_value}) ="
-        if self.current_value=="90":
-            self.current_value ="Invalid input"
-        elif self.current_value == "45":
+    def cos(self):  # κανω στρογγυλοποιηση ετσι ωστε το cos(60)=0.5  με χρηση της np.round
+        self.total_value = f"cos({self.current_value}\u00b0) ="
+        if (self.current_value == "90" or self.current_value == "270"):
+            self.current_value = 0.0
+        else:
+            self.current_value = str(np.round((np.cos(float(self.current_value) * np.pi / 180)), 2))
+        self.update_current_value()
+        self.update_total_value()
+
+    def tan(self):  # Υπολογίζουμε την εφαπτομένη tan προσέχοντας οτι tan(90) και tan(270)δεν ορίζεται και οτι tan(45)=1
+        self.total_value = f"tan({self.current_value}\u00b0) ="
+        if self.current_value == "90" or self.current_value == "270":
+            self.current_value = "Invalid input"
+        else:
             self.current_value = str(np.round((np.tan(float(self.current_value) * np.pi / 180)), 2))
-        else:
-            self.current_value = str(np.tan(float(self.current_value) * np.pi / 180))
         self.update_current_value()
         self.update_total_value()
 
@@ -649,13 +648,13 @@ class Calculator:
         self.update_current_value()
         self.update_total_value()
 
-    def rad_to_deg(self):#μετατροπή rad to degrees με χρήση της numpy.rad2deg
-        self.current_value = str(np.rad2deg(float(self.current_value)))
+    def rad_to_deg(self):  # μετατροπή rad to degrees με χρήση της numpy.rad2deg
+        self.current_value = (str(np.rad2deg(float(self.current_value))) + "\u00b0")
         self.update_current_value()
         self.update_total_value()
 
-    def deg_to_rad(self):#μετατροπή rad to degrees με χρήση της numpy.deg2rad
-        self.current_value = str(np.deg2rad(float(self.current_value)))
+    def deg_to_rad(self):  # μετατροπή deg to rad με χρήση της numpy.deg2rad
+        self.current_value = (str(np.deg2rad(float(self.current_value))) + " (rad)")
         self.update_current_value()
         self.update_total_value()
 
@@ -664,18 +663,21 @@ class Calculator:
         self.update_current_value()
         self.update_total_value()
 
-    def arcsin(self):#Υπολογισμός τοξου sin
-        self.current_value =str(np.arcsin(float(self.current_value)))
+    def arcsin(self):  # Υπολογισμός τοξου sin
+        self.total_value = f"sin\u207B\u00B9({self.current_value})rad="
+        self.current_value = str(np.arcsin(float(self.current_value)))
         self.update_current_value()
         self.update_total_value()
 
-    def arccos(self):#Yπολογισμός τόξου cos
-        self.current_value =str(np.arccos(float(self.current_value)))
+    def arccos(self):  # Yπολογισμός τόξου cos
+        self.total_value = f"cos\u207B\u00B9({self.current_value})rad="
+        self.current_value = str(np.arccos(float(self.current_value)))
         self.update_current_value()
         self.update_total_value()
 
-    def arctan(self):#Υπολογισμός τόξου tan
-        self.current_value =str(np.arctan(float(self.current_value)))
+    def arctan(self):  # Υπολογισμός τόξου tan
+        self.total_value = f"tan\u207B\u00B9({self.current_value})rad="
+        self.current_value = str(np.arctan(float(self.current_value)))
         self.update_current_value()
         self.update_total_value()
 
