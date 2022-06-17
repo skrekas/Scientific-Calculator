@@ -147,12 +147,11 @@ class Calculator:
         }
 
         # Ορίζoυμε ένα λεξικό με τα σύμβολα για τις βασικές πράξεις για να το χρησιμοποιήσουμε στη συνάρτηση
-        # που θα ενεργοποιεί και το πληκτρολόγιο για την εισοδο στοιχείων, 11-6-2022
+        # που θα ενεργοποιεί και το πληκτρολόγιο για την εισοδο στοιχείων
         self.basic_operators = {"/": "\u00F7", "x": "\u00D7", "-": "-", "+": "+"}
 
         self.total_value = ""
         self.current_value = "0"
-        self.angle_mode = 'radians'
 
         #
         self.screen_frame = self.create_screen_frame()
@@ -188,14 +187,7 @@ class Calculator:
         current_value_lbl = tk.Label(self.screen_frame, text=self.current_value,
                                    anchor=tk.E, bg=BACKGROUND_COLOR,
                                      fg=SCREEN_DIGIT_COLOR, padx=20, font=LARGE_FONT)
-        current_value_lbl.pack(expand=True, fill="both")
-
-        # Κείμενο (label) που αντιπροσωπεύει τη λειτουργία (mode) των γωνιών (degrees, radians)
-        # Επηρεάζει τις τριγωνομετρικές συναρτήσεις
-        angle_mode_lbl = tk.Label(self.screen_frame, text=self.angle_mode,
-                                   anchor=tk.E, bg=BACKGROUND_COLOR,
-                                     fg=SCREEN_DIGIT_COLOR, padx=20, font=SMALL_FONT)
-        current_value_lbl.pack(expand=True, fill="both")
+        current_value_lbl.pack(expand=True, fill="both"
 
         return total_value_lbl, current_value_lbl, angle_mode_lbl
 
@@ -214,11 +206,6 @@ class Calculator:
             self.DOT['state'] = 'disabled'
 
         self.current_value += str(value)
-
-        # TODO - FIX THE SCIENTIFIC FORMAT
-        if len(self.current_value) > 20:
-            scientific_format_value = '%.2E' % float(self.current_value)
-            self.update_current_value()
         self.update_current_value()
 
     # Συνάρτηση που δημιουργεί τα ψηφία 0-9 και τα
@@ -375,7 +362,7 @@ class Calculator:
                                  command=self.inverse_number)
         self.INVERSE.grid(row=4, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
-        self.SQUARE = tk.Button(self.buttons_frame, text='x\u00b2',#11-6-2022
+        self.SQUARE = tk.Button(self.buttons_frame, text='x\u00b2',
                                 bg='#c9c5ab', fg=OPERATION_COLOR,
                                 font=FUNCTIONS_FONT, borderwidth=0,
                                 command=self.square_number)
