@@ -187,7 +187,7 @@ class Calculator:
         current_value_lbl = tk.Label(self.screen_frame, text=self.current_value,
                                    anchor=tk.E, bg=BACKGROUND_COLOR,
                                      fg=SCREEN_DIGIT_COLOR, padx=20, font=LARGE_FONT)
-        current_value_lbl.pack(expand=True, fill="both"
+        current_value_lbl.pack(expand=True, fill="both")
 
         return total_value_lbl, current_value_lbl
 
