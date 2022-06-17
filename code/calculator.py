@@ -155,7 +155,7 @@ class Calculator:
 
         #
         self.screen_frame = self.create_screen_frame()
-        self.total_value_lbl, self.current_value_lbl, self.angle_mode_lbl = self.create_display_readings()
+        self.total_value_lbl, self.current_value_lbl = self.create_display_readings()
 
         self.buttons_frame = self.create_buttons_frame()
 
