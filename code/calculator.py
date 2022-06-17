@@ -274,12 +274,12 @@ class Calculator:
                              font=FUNCTIONS_FONT, borderwidth=0,
                              command= self.ten_power)
         self.TENPOWER.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
-        #TO DO
+      
         self.NPOWER = tk.Button(self.buttons_frame, text='x\u02b8',
                                    bg='#c9c5ab', fg=OPERATION_COLOR,
                                    font=FUNCTIONS_FONT, borderwidth=0, command=lambda:self.add_to_value(" ^ "))
         self.NPOWER.grid(row=1, column=1, sticky=tk.NSEW, padx=5, pady=5)
-        #TO DO
+    
         self.NthROOT = tk.Button(self.buttons_frame, text="\u02b8\u221Ax",
                                  bg='#c9c5ab', fg=OPERATION_COLOR,
                                  font=FUNCTIONS_FONT, borderwidth=0, command=lambda:self.add_to_value(" R "))
