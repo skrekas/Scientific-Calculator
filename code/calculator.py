@@ -315,7 +315,7 @@ class Calculator:
         self.MOD = tk.Button(self.buttons_frame, text='MOD',
                              bg='#c9c5ab', fg=OPERATION_COLOR,
                              font=FUNCTIONS_FONT, borderwidth=0,
-                             )
+                             command=lambda x=" mod ": self.add_to_value(x))
         self.MOD.grid(row=2, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         self.ABSOLUTE = tk.Button(self.buttons_frame, text='|x|',
@@ -493,6 +493,8 @@ class Calculator:
         elif components[1] == "^":
             print("Raising to power")
             self.current_value = str(np.power(eval(components[0]), eval(components[2])))
+        elif components[1] == "mod":
+            self.current_value = str(eval(components[0] + "%" + components[2]))
         elif components[1] == "R":
             self.current_value = str(np.power(eval(components[0]), 1 / eval(components[2])))
 
@@ -599,7 +601,7 @@ class Calculator:
         self.update_total_value()
 
     def sin(self):
-        self.total_value = f"sin({self.current_value}) ="
+        self.total_value = f"sin({self.current_value}\u00b0) ="
         self.current_value = str(np.sin(float(self.current_value)*np.pi/180))#Πολλαπλασιαζω με np.pi/180 για να παρω
                                                                                 #αποτελεσμα σε radians 11-6-2022
         self.update_current_value()
@@ -684,11 +686,9 @@ class Calculator:
 
     def memory_clear(self):
         self.memory = None
-        print(f"Value in memory {self.memory}")
 
     def memory_add(self, val):
         self.memory = val
-        print(f"Value in memory {self.memory}")
 
     def memory_recal(self):
         if self.memory:
@@ -696,7 +696,6 @@ class Calculator:
             self.update_current_value()
         else:
             pass
-        print(f"Value in memory {self.memory}")
 
 
 
